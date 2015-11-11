@@ -4,8 +4,18 @@ require "rulers/array"
 module Rulers
   class Application
     def call(env)
-      [200, {'Content-Type' => 'text/html'},
-       ["<h1>Hello from Ruby on Rulers</h1>"]]
+      klass, act = get_controller_and_action(env)
+      controller = klass.new(env)
+      text = controller.send(act)
+      [200, {'Content-Type' => 'text/html'}, [text]]
+    end
+    class Controller
+      def initialize(env)
+        @env = env
+      end
+      def env
+        @env
+      end
     end
   end
 end
